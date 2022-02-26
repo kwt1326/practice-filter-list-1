@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from "react-query";
-import ProductList from './ProductList';
+import ProductList from './pages/ProductList';
 
 const queryClient = new QueryClient();
 
