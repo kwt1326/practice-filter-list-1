@@ -1,12 +1,10 @@
 import React from 'react';
-import ListItem from './ListItem';
 import styles from './GridList.module.scss';
 
-function GridList() {
+function GridList(props: { children: React.ReactNode }) {
   return (
     <div className={styles.container}>
-      <ListItem />
-      GridList Test
+      {props.children}
     </div>
   )
 }
