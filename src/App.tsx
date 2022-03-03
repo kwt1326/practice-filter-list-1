@@ -10,7 +10,7 @@ function App() {
   return (
     <RootProvider>
       <Suspense fallback={<FallBackView />}>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <Routes>
             <Route path='/' element={<Navigator />} />
             <Route path='/products' element={<ProductList />} />
