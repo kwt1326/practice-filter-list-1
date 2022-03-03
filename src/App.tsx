@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RootProvider } from './store';
 
 import FallBackView from './components/FallBackView';
-import Navigator from './pages/Navigator';
 import ProductList from './pages/ProductList';
 
 function App() {
@@ -12,8 +11,7 @@ function App() {
       <Suspense fallback={<FallBackView />}>
         <Router basename={process.env.PUBLIC_URL}>
           <Routes>
-            <Route path='/' element={<Navigator />} />
-            <Route path='/products' element={<ProductList />} />
+            <Route path='/' element={<ProductList />} />
           </Routes>
         </Router>
       </Suspense>
