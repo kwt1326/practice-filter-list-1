@@ -1,13 +1,13 @@
 import React from 'react';
 import Header from '../Header';
-import { IProps } from './ContentWrap';
+import { ContentWrapTypes } from 'ContentWrap';
 import styles from './ContentWrap.module.scss';
 
-function ContentWrap(props: IProps) {
+function ContentWrap(props: ContentWrapTypes.IProps) {
   return (
     <section className={styles.container}>
       <Header />
-      <section>
+      <section className={styles.contents}>
         {props.children}
       </section>
     </section>

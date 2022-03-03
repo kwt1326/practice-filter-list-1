@@ -1,8 +1,12 @@
+@import "../../../assets/styles/vendor_mixin.scss";
+
 .container {
+  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
   
   .content_wrapper {
+    width: 100%;
 
     .img_wrapper {
       position: relative;
@@ -20,6 +24,7 @@
     }
 
     .contents {
+      @include flex_direction(column);
       margin-top: 8px;
       font-size: 12px;
       color: #ffffff;

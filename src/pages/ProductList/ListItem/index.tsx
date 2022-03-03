@@ -1,8 +1,8 @@
 import React from 'react';
-import { ProductData } from '../ProductList';
+import { ProductListTypes } from 'ProductList';
 import styles from './ListItem.module.scss';
 
-function ListItem(props: { data: ProductData }) {
+function ListItem(props: { data: ProductListTypes.ProductData }) {
   return (
     <div className={styles.container}>
       <div className={styles.content_wrapper}>
@@ -25,4 +25,4 @@ function ListItem(props: { data: ProductData }) {
   )
 }
 
-export default ListItem;
+export default React.memo(ListItem);

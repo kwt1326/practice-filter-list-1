@@ -1,0 +1,15 @@
+@import "../../../assets/styles/vendor_mixin.scss";
+
+.container {
+  @include flex_direction(row);
+  margin-right: 16px;
+
+  .label {
+    padding-left: 8px;
+    font-size: 14px;
+  }
+
+  input[type="checkbox"] {
+    margin: 1px 0 4px 0;
+  }
+}

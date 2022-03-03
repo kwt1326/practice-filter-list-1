@@ -1,0 +1,10 @@
+@import "../../assets/styles/vendor_mixin.scss";
+
+.container {
+  position: relative;
+  
+  .contents {
+    @include flex_direction(column);
+    padding: 40px 40px 0 40px;
+  }
+}

@@ -1,17 +1,23 @@
 import React, { Suspense } from 'react';
-import { QueryClient, QueryClientProvider } from "react-query";
-import FallBackView from './components/FallBackView';
-import ProductList from './pages/ProductList';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { RootProvider } from './store';
 
-const queryClient = new QueryClient();
+import FallBackView from './components/FallBackView';
+import Navigator from './pages/Navigator';
+import ProductList from './pages/ProductList';
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <RootProvider>
       <Suspense fallback={<FallBackView />}>
-        <ProductList />
+        <Router>
+          <Routes>
+            <Route path='/' element={<Navigator />} />
+            <Route path='/products' element={<ProductList />} />
+          </Routes>
+        </Router>
       </Suspense>
-    </QueryClientProvider>
+    </RootProvider>
   );
 }
 

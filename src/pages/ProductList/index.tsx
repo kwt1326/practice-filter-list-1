@@ -1,36 +1,79 @@
-import React from 'react';
-import { useQuery } from 'react-query';
-import { ProductData } from './ProductList';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { ProductListTypes } from 'ProductList';
+import { ProductContext } from '../../store';
+import { ProductStore } from '../../store/service/product';
+import { useStore } from '../../hooks/UseStore';
+import { useFilter, useRequest } from '../../hooks/ProductListHook';
+import { useIntersection } from '../../hooks/UseIntersection';
+
 import Filter from '../../components/Filter';
 import GridList from '../../components/GridList';
+import SearchBox from '../../components/SearchBox';
+import ContentWrap from '../../components/ContentWrap';
 import ListItem from './ListItem';
 
 import styles from './ProductList.module.scss';
 
 function ProductList() {
-  const { isLoading, data, error } = useQuery(
-    'productListData', () => fetch('https://closet-sample.azurewebsites.net/api/data')
-      .then(res => res.json())
-  )
+  const store = useStore<ProductStore>(ProductContext);
+  useRequest(store);
+  
+  const [searchParams] = useSearchParams();
+  const [cursor, setCursor] = useState<number>(1);
+  const [data, setData] = useState<ProductListTypes.ProductData[]>([]);
 
-  if (error) { return <span>{'Fetching Error'}</span> }
+  const filterData = useFilter({
+    prevData: data,
+    cursor,
+    store,
+    searchParams,
+  });
 
-  const ProductList = () => {
-    if (isLoading) {
-      return <div>{'Loading...'}</div>
-    }
-    if (!data) {
-      return <div>{'Fetching Failed!'}</div>
-    }
-    return <GridList children={data.map((item: ProductData) => <ListItem data={item} />)} />
-  }
+  const nextPage = useCallback(() => new Promise((resolve) => setTimeout(() => {
+    setCursor(prevCursor => prevCursor + 1); resolve({});
+  }, 1000)), []);
+
+  const [, setObserverRef] = useIntersection(async (
+    entry: IntersectionObserverEntry,
+    observer: IntersectionObserver
+  ) => {
+    observer.unobserve(entry.target);
+    await nextPage();
+    observer.observe(entry.target);
+  });
+  
+  useLayoutEffect(() => {
+    setData(filterData);
+  }, [filterData])
+
+  /* render component */
+
+  const getProductItems = () => data?.map((item: ProductListTypes.ProductData, i: React.Key) => <ListItem key={i} data={item} />)
+
+  const ItemCount = () => <div className={styles.item_count_wrap}>{`${data?.length} items`}</div>
+
+  const SpacingBox = () => <div className={styles.spacing_box_horizontal} />
 
   return (
-    <div className={styles.container}>
-      <Filter />
-      <ProductList />
-    </div>
+    <ContentWrap>
+      <SearchBox onSearchCallback={() => setCursor(1)} />
+      <SpacingBox />
+      <Filter
+        checkItemsLabel={'Pricing Options'}
+        checkItems={['Paid', 'Free', 'View Only']}
+        onCheckChange={() => setCursor(1)}
+        onReset={() => setCursor(1)}
+      />
+      <ItemCount />
+      <GridList children={getProductItems()} />
+      <div
+        ref={setObserverRef as React.LegacyRef<HTMLDivElement>}
+        className={styles.observer}
+      />
+    </ContentWrap>
   )
 }
 
-export default ProductList;
+export default observer(ProductList);
